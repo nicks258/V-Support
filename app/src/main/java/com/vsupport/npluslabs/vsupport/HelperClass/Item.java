@@ -1,4 +1,4 @@
-package com.vsupport.npluslabs.vsupport;
+package com.vsupport.npluslabs.vsupport.HelperClass;
 
 public class Item {
     int id;

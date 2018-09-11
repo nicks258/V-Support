@@ -11,6 +11,10 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
 
+import com.vsupport.npluslabs.vsupport.Adapters.NavAdapter;
+import com.vsupport.npluslabs.vsupport.Fragments.TamilShows;
+import com.vsupport.npluslabs.vsupport.Fragments.TeluguShowsMenu;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -138,6 +142,12 @@ public class MainActivity extends AppCompatActivity implements ExpandableListVie
                 childPosition).equals("Telugu")){
             TamilShows tamilShows = new TamilShows();
             getSupportFragmentManager().beginTransaction().replace(R.id.container_body,tamilShows).commit();
+        }
+        if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Tamil")){
+            TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).commit();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;

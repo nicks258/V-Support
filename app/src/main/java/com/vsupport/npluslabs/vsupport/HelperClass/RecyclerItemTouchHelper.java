@@ -1,9 +1,11 @@
-package com.vsupport.npluslabs.vsupport;
+package com.vsupport.npluslabs.vsupport.HelperClass;
 
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+
+import com.vsupport.npluslabs.vsupport.Adapters.CartListAdapter;
 
 /**
  * Created by ravi on 29/09/17.

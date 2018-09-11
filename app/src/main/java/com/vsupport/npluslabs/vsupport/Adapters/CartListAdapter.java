@@ -1,4 +1,4 @@
-package com.vsupport.npluslabs.vsupport;
+package com.vsupport.npluslabs.vsupport.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.vsupport.npluslabs.vsupport.HelperClass.Item;
+import com.vsupport.npluslabs.vsupport.R;
 
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyView
         final Item item = cartList.get(position);
         holder.name.setText(item.getName());
         holder.description.setText(item.getDescription());
-        holder.price.setText("₹" + item.getPrice());
+        holder.price.setText("Votes " + item.getPrice());
 
         Glide.with(context)
                 .load(item.getThumbnail())

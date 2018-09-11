@@ -1,4 +1,4 @@
-package com.vsupport.npluslabs.vsupport;
+package com.vsupport.npluslabs.vsupport.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.vsupport.npluslabs.vsupport.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
