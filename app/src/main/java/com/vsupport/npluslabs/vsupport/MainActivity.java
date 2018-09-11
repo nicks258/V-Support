@@ -1,5 +1,6 @@
 package com.vsupport.npluslabs.vsupport;
 
+import android.app.FragmentManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.GravityCompat;
@@ -7,6 +8,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
@@ -40,7 +42,11 @@ public class MainActivity extends AppCompatActivity implements ExpandableListVie
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+
         initDrawer();
+        TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
+        getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).commit();
+
     }
 
     private void initDrawer() {
@@ -141,15 +147,30 @@ public class MainActivity extends AppCompatActivity implements ExpandableListVie
                 listDataHeader.get(groupPosition)).get(
                 childPosition).equals("Telugu")){
             TamilShows tamilShows = new TamilShows();
-            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,tamilShows).commit();
+            getSupportFragmentManager().beginTransaction().
+                    replace(R.id.container_body,tamilShows).
+                    addToBackStack(null)
+                    .commit();
         }
         if(listDataChild.get(
                 listDataHeader.get(groupPosition)).get(
                 childPosition).equals("Tamil")){
             TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
-            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).addToBackStack(null).commit();
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStack();
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
+        }
     }
 }

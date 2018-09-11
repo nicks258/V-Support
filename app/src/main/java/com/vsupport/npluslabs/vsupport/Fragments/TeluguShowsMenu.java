@@ -19,10 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.vsupport.npluslabs.vsupport.Adapters.AlbumsAdapter;
 import com.vsupport.npluslabs.vsupport.HelperClass.Album;
+import com.vsupport.npluslabs.vsupport.HelperClass.RecyclerItemClickListener;
 import com.vsupport.npluslabs.vsupport.R;
 
 import java.util.ArrayList;
@@ -65,7 +67,19 @@ public class TeluguShowsMenu extends Fragment {
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                       // Toast.makeText(getActivity(),"clicked on"+ position,Toast.LENGTH_LONG).show();
+                        TamilShows tamilShows = new TamilShows();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,tamilShows).addToBackStack(null).commit();
+                        // do whatever
+                    }
 
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                }));
         prepareAlbums();
 
         try {
