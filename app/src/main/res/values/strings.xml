@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">V Support</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
+
+    <string name="nav_item_home">Shows</string>
+    <string name="nav_item_friends">Events</string>
+    <string name="nav_item_notifications">Activities</string>
+
+    <!-- navigation drawer item labels  -->
+    <string-array name="nav_drawer_labels">
+        <item>@string/nav_item_home</item>
+        <item>@string/nav_item_friends</item>
+        <item>@string/nav_item_notifications</item>
+    </string-array>
+
+    <string-array name="elements_home">
+        <item>Telugu</item>
+        <item>Tamil</item>
+        <item>English</item>
+        <!--<item>Tagore</item>-->
+    </string-array>
+
+    <string-array name="elements_friends">
+        <item>Virtual 2k Run</item>
+        <item>Virtual 4k Run</item>
+        <item>Virtual 7k Run</item>
+        <item>Virtual 9k Run</item>
+        <item>Virtual 10k Run</item>
+        <item>Virtual 15k Run</item>
+    </string-array>
+
+    <string-array name="elements_notifs">
+        <item>Fitness</item>
+        <item>Yoga</item>
+        <item>Gym</item>
+        <item>Run</item>
+        <item>Walk</item>
+    </string-array>
+
+    <string name="title_messages">Messages</string>
+    <string name="title_friends">Friends</string>
+    <string name="title_home">Home</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
+
