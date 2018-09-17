@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import com.vsupport.npluslabs.vsupport.Adapters.CartListAdapter;
 import com.vsupport.npluslabs.vsupport.HelperClass.Item;
 import com.vsupport.npluslabs.vsupport.MainActivity;
@@ -30,9 +33,14 @@ import com.vsupport.npluslabs.vsupport.R;
 import com.vsupport.npluslabs.vsupport.HelperClass.RecyclerItemTouchHelper;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 
 
 /**
@@ -49,7 +57,7 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
     private List<Item> cartList;
     private CartListAdapter mAdapter;
     private CoordinatorLayout coordinatorLayout;
-    private static final String URL = "https://api.androidhive.info/json/menu.json";
+    private static final String URL = "http://almaland.net/vsupport_api/participants";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -79,66 +87,66 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
         return view;
     }
 
-    private void prepareCart() {
-       Item item1 = new Item();
-       item1.setName("Geetha Madhuri");
-       item1.setDescription("She is one of the contestants in Bigg Boss Telugu 2. A playback singer and dubbing artist in Tollywood.");
-       item1.setId(1);
-       item1.setPrice(312);
-       item1.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F555ac40d-1c97-43e6-a9e2-604925feec31%2Fgm.png?auto=format&q=35&fm=pjpeg");
-
-       cartList.add(item1);
-
-        Item item2 = new Item();
-        item2.setName("Anchor Deepthi");
-        item2.setDescription("A news anchor with a television channel, she's also a district level hockey player.");
-        item2.setId(2);
-        item2.setPrice(362);
-        item2.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F12cbf045-32cc-4281-a7eb-7d8252aa7f78%2F999.png?auto=format&q=35&fm=pjpeg");
-
-        cartList.add(item2);
-
-        Item item3 = new Item();
-        item3.setName("Actress Tejaswi");
-        item3.setDescription("She was seen in in films like Kerintha, Srimanthudu, Seethamma Vakitlo Sirimalle Chettu and Rojulu Marayi.");
-        item3.setId(3);
-        item3.setPrice(302);
-        item3.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F8fc8c4bd-0487-43c8-a619-48a22524a621%2Fta.png?auto=format&q=35&fm=pjpeg");
-
-
-        cartList.add(item3);
-
-
-        Item item4 = new Item();
-        item4.setName("Hero Tanish");
-        item4.setDescription("He essayed the role of a child artiste in Devullu and Manmadhudu which did good business at the box office.");
-        item4.setId(4);
-        item4.setPrice(412);
-        item4.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F85e7b750-e05c-4084-9ff5-1f3e93ab7518%2Ftaheru.jpg?auto=format&q=35&fm=pjpeg");
-
-
-        cartList.add(item4);
-
-
-        Item item5 = new Item();
-        item5.setName("Actress Deepthi Sunaina");
-        item5.setDescription("She is seen as a social media network sensation especially on Instagram and Youtube.");
-        item5.setId(5);
-        item5.setPrice(352);
-        item5.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2Fb9c73fd9-c76d-4669-a159-c0ee779a5c72%2Fgasghdas.png?auto=format&q=35&fm=pjpeg");
-
-        cartList.add(item5);
-
-        Item item6 = new Item();
-        item6.setName("Actor Samrat");
-        item6.setDescription("He was last seen in Anushka's Panchakshari playing the role of a husband.");
-        item6.setId(6);
-        item6.setPrice(412);
-        item6.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F62af40b6-a2cc-434c-89f9-b5ed8b065e20%2Ffasgas.jpg?auto=format&q=35&fm=pjpeg");
-
-        cartList.add(item6);
-        mAdapter.notifyDataSetChanged();
-    }
+//    private void prepareCart() {
+//       Item item1 = new Item();
+//       item1.setName("Geetha Madhuri");
+//       item1.setDescription("She is one of the contestants in Bigg Boss Telugu 2. A playback singer and dubbing artist in Tollywood.");
+//       item1.setId(1);
+//       item1.setPrice(312);
+//       item1.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F555ac40d-1c97-43e6-a9e2-604925feec31%2Fgm.png?auto=format&q=35&fm=pjpeg");
+//
+//       cartList.add(item1);
+//
+//        Item item2 = new Item();
+//        item2.setName("Anchor Deepthi");
+//        item2.setDescription("A news anchor with a television channel, she's also a district level hockey player.");
+//        item2.setId(2);
+//        item2.setPrice(362);
+//        item2.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F12cbf045-32cc-4281-a7eb-7d8252aa7f78%2F999.png?auto=format&q=35&fm=pjpeg");
+//
+//        cartList.add(item2);
+//
+//        Item item3 = new Item();
+//        item3.setName("Actress Tejaswi");
+//        item3.setDescription("She was seen in in films like Kerintha, Srimanthudu, Seethamma Vakitlo Sirimalle Chettu and Rojulu Marayi.");
+//        item3.setId(3);
+//        item3.setPrice(302);
+//        item3.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F8fc8c4bd-0487-43c8-a619-48a22524a621%2Fta.png?auto=format&q=35&fm=pjpeg");
+//
+//
+//        cartList.add(item3);
+//
+//
+//        Item item4 = new Item();
+//        item4.setName("Hero Tanish");
+//        item4.setDescription("He essayed the role of a child artiste in Devullu and Manmadhudu which did good business at the box office.");
+//        item4.setId(4);
+//        item4.setPrice(412);
+//        item4.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F85e7b750-e05c-4084-9ff5-1f3e93ab7518%2Ftaheru.jpg?auto=format&q=35&fm=pjpeg");
+//
+//
+//        cartList.add(item4);
+//
+//
+//        Item item5 = new Item();
+//        item5.setName("Actress Deepthi Sunaina");
+//        item5.setDescription("She is seen as a social media network sensation especially on Instagram and Youtube.");
+//        item5.setId(5);
+//        item5.setPrice(352);
+//        item5.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2Fb9c73fd9-c76d-4669-a159-c0ee779a5c72%2Fgasghdas.png?auto=format&q=35&fm=pjpeg");
+//
+//        cartList.add(item5);
+//
+//        Item item6 = new Item();
+//        item6.setName("Actor Samrat");
+//        item6.setDescription("He was last seen in Anushka's Panchakshari playing the role of a husband.");
+//        item6.setId(6);
+//        item6.setPrice(412);
+//        item6.setThumbnail("https://images.assettype.com/sakshipost%2F2018-06%2F62af40b6-a2cc-434c-89f9-b5ed8b065e20%2Ffasgas.jpg?auto=format&q=35&fm=pjpeg");
+//
+//        cartList.add(item6);
+//        mAdapter.notifyDataSetChanged();
+//    }
 
 //    private void prepareCart() {
 //        JsonArrayRequest request = new JsonArrayRequest(URL,
@@ -172,6 +180,97 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
 //        MyApplication.getInstance().addToRequestQueue(request);
 //    }
 
+    private void prepareCart() {
+        String url = URL;
+        Log.i("URL->",url);
+        RequestQueue queue = Volley.newRequestQueue(getActivity());
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                       // Logger.addLogAdapter(new AndroidLogAdapter());
+                        Log.d("Response-> ", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            Log.i("TamilShows", jsonObject.toString());
+                            JSONArray events = jsonObject.getJSONArray("events");
+                            for(int i=0;i<events.length();i++){
+                                Item item = new Item();
+                                JSONObject participantObject = events.getJSONObject(i);
+                                int id = participantObject.getInt("id");
+                                String participantName = participantObject.getString("participant_name");
+                                String participant_pic = participantObject.getString("participant_pic");
+                                item.setName(participantName);
+                                item.setDescription("One of the contestants in Bigg Boss Telugu 2. A playback singer and dubbing artist in Tollywood.");
+                                item.setId(1);
+                                item.setPrice(312);
+                                item.setThumbnail(participant_pic);
+                                cartList.add(item);
+                            }
+                            mAdapter.notifyDataSetChanged();
+//                            if (java.util.Objects.equals(jsonObject.getString("status"), "true"))
+//                            {
+//
+//                                JSONObject userDetails = jsonObject.getJSONObject("userdetails");
+//
+//                            }
+//                            else {
+////                                progressDialog.dismiss();
+////                                new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.ERROR_TYPE)
+////                                        .setTitleText("Oops...")
+////                                        .setContentText("" +jsonObject.getString("reason"))
+////                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+////                                            @Override
+////                                            public void onClick(SweetAlertDialog sDialog) {
+////                                                sDialog.dismissWithAnimation();
+////                                            }
+////                                        })
+////                                        .show();
+//                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+//                        progressDialog.dismiss();
+//                        new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.ERROR_TYPE)
+//                                .setTitleText("Oops...")
+//                                .setContentText("Something went wrong!")
+//                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                                    @Override
+//                                    public void onClick(SweetAlertDialog sDialog) {
+//                                        sDialog.dismissWithAnimation();
+//                                    }
+//                                })
+//                                .show();
+                    }
+                }
+        ) {
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("event_id", "1");
+                return params;
+            }
+        };
+        MyApplication.getInstance().addToRequestQueue(postRequest);
+//        postRequest.setShouldCache(false);
+//        queue.getCache().clear();
+//        queue.add(postRequest);
+    }
+
     /**
      * callback when recycler view is swiped
      * item will be removed on swiped
@@ -188,19 +287,19 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
             final int deletedIndex = viewHolder.getAdapterPosition();
 
             // remove the item from recycler view
-            mAdapter.removeItem(viewHolder.getAdapterPosition());
+          //  mAdapter.removeItem(viewHolder.getAdapterPosition());
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout, name + " removed from cart!", Snackbar.LENGTH_LONG);
-            snackbar.setAction("UNDO", new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    // undo is selected, restore the deleted item
-                    mAdapter.restoreItem(deletedItem, deletedIndex);
-                }
-            });
+                    .make(coordinatorLayout,   " You voted for " + name + " !", Snackbar.LENGTH_LONG);
+//            snackbar.setAction("UNDO", new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    // undo is selected, restore the deleted item
+//                    mAdapter.restoreItem(deletedItem, deletedIndex);
+//                }
+//            });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
         }

@@ -14,6 +14,7 @@ import android.widget.ExpandableListView;
 import android.widget.Toast;
 
 import com.vsupport.npluslabs.vsupport.Adapters.NavAdapter;
+import com.vsupport.npluslabs.vsupport.Fragments.GameFragment;
 import com.vsupport.npluslabs.vsupport.Fragments.TamilShows;
 import com.vsupport.npluslabs.vsupport.Fragments.TeluguShowsMenu;
 
@@ -158,6 +159,48 @@ public class MainActivity extends AppCompatActivity implements ExpandableListVie
             TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
             getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).addToBackStack(null).commit();
         }
+        if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 2k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }
+        if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 2k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }
+        if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 4k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }
+        if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 7k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 9k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 10k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }if(listDataChild.get(
+                listDataHeader.get(groupPosition)).get(
+                childPosition).equals("Virtual 15k Run")){
+            GameFragment gameFragment = new GameFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).addToBackStack(null).commit();
+        }
+
+
+
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
