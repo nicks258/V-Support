@@ -1,6 +1,8 @@
 package com.vsupport.npluslabs.vsupport.Fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -14,16 +16,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.plattysoft.leonids.ParticleSystem;
+import com.vsupport.npluslabs.vsupport.MyApplication;
 import com.vsupport.npluslabs.vsupport.R;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,7 +52,9 @@ public class GameFragment extends Fragment {
     Timer T;
     View view;
     TextView score;
+    ProgressDialog progressDialog;
     ImageView hitMe;
+    private static final String SAVEURL = "http://almaland.net/vsupport_api/save_record";
     private String EVENT_DATE_TIME = "2018-12-31 10:30:00";
     private String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private LinearLayout linear_layout_1, linear_layout_2;
@@ -51,6 +67,7 @@ public class GameFragment extends Fragment {
     private static final String FORMAT = "%02d:%02d:%02d";
     int count;
     int seconds , minutes;
+    String userId;
 
 
 
@@ -67,7 +84,8 @@ public class GameFragment extends Fragment {
                 counter++;
                 score.setText(""+counter);
                 if(counter==2000){
-                    onFinish();
+                    sendScore(String.valueOf(count));
+
                 }
             }
         });
@@ -79,7 +97,9 @@ public class GameFragment extends Fragment {
         tv_second =  view.findViewById(R.id.tv_second_title);
 
 
-
+        SharedPreferences prefs = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
+        String uuid = prefs.getString("user_id", null);
+        userId = uuid;
        // reverseTimer(10);
         particleSystem1 = new ParticleSystem(getActivity(), 80, R.drawable.confeti3, 10000);
         particleSystem2 = new ParticleSystem(getActivity(), 80, R.drawable.confeti2, 10000);
@@ -305,6 +325,70 @@ public class GameFragment extends Fragment {
                 })
                 .show();
 
+    }
+
+    private void sendScore(final String timeTaken){
+        progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Casting vote...");
+        progressDialog.show();
+
+        String url = SAVEURL;
+        Log.i("URL->",url);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        // response
+                        // Logger.addLogAdapter(new AndroidLogAdapter());
+                        Log.d("Response-> ", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            onFinish();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                        progressDialog.dismiss();
+                        new SweetAlertDialog(getActivity(),SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+        ) {
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", userId);
+                params.put("event", "2k");
+                params.put("time_taken", timeTaken);
+               // params.put("vote", "1");
+                return params;
+            }
+        };
+        MyApplication.getInstance().addToRequestQueue(postRequest);
     }
 
 }
