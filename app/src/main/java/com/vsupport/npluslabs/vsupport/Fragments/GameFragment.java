@@ -83,7 +83,7 @@ public class GameFragment extends Fragment {
             public void onClick(View view) {
                 counter++;
                 score.setText(""+counter);
-                if(counter==2000){
+                if(counter==20){
                     sendScore(String.valueOf(count));
 
                 }
@@ -270,7 +270,7 @@ public class GameFragment extends Fragment {
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
                         TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).addToBackStack(null).commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).commit();
                     }
                 })
                 .show();
