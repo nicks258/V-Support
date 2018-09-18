@@ -1,6 +1,9 @@
 package com.vsupport.npluslabs.vsupport.Fragments;
 
 
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -27,6 +30,7 @@ import com.android.volley.toolbox.Volley;
 
 import com.vsupport.npluslabs.vsupport.Adapters.CartListAdapter;
 import com.vsupport.npluslabs.vsupport.HelperClass.Item;
+import com.vsupport.npluslabs.vsupport.LoginActivity;
 import com.vsupport.npluslabs.vsupport.MainActivity;
 import com.vsupport.npluslabs.vsupport.MyApplication;
 import com.vsupport.npluslabs.vsupport.R;
@@ -42,6 +46,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +64,11 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
     private RecyclerView recyclerView;
     private List<Item> cartList;
     private CartListAdapter mAdapter;
+    ProgressDialog progressDialog;
+    String userId;
     private CoordinatorLayout coordinatorLayout;
     private static final String URL = "http://almaland.net/vsupport_api/participants";
+    private static final String VOTINGURL = "http://almaland.net/vsupport_api/voting";
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,6 +79,9 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
         cartList = new ArrayList<>();
         mAdapter = new CartListAdapter(getActivity(), cartList);
 
+        SharedPreferences prefs = getActivity().getSharedPreferences("user_info", MODE_PRIVATE);
+        String uuid = prefs.getString("user_id", null);
+        userId = uuid;
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -195,40 +209,23 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             Log.i("TamilShows", jsonObject.toString());
-                            JSONArray events = jsonObject.getJSONArray("events");
+                            JSONArray events = jsonObject.getJSONArray("participants");
                             for(int i=0;i<events.length();i++){
                                 Item item = new Item();
                                 JSONObject participantObject = events.getJSONObject(i);
-                                int id = participantObject.getInt("id");
+                                int id = participantObject.getInt("participant_id");
                                 String participantName = participantObject.getString("participant_name");
                                 String participant_pic = participantObject.getString("participant_pic");
+                                String description = participantObject.getString("participant_des");
+                                int votes = participantObject.getInt("votes");
                                 item.setName(participantName);
-                                item.setDescription("One of the contestants in Bigg Boss Telugu 2. A playback singer and dubbing artist in Tollywood.");
-                                item.setId(1);
-                                item.setPrice(312);
+                                item.setDescription(description);
+                                item.setId(id);
+                                item.setPrice(votes);
                                 item.setThumbnail(participant_pic);
                                 cartList.add(item);
                             }
                             mAdapter.notifyDataSetChanged();
-//                            if (java.util.Objects.equals(jsonObject.getString("status"), "true"))
-//                            {
-//
-//                                JSONObject userDetails = jsonObject.getJSONObject("userdetails");
-//
-//                            }
-//                            else {
-////                                progressDialog.dismiss();
-////                                new SweetAlertDialog(LoginActivity.this,SweetAlertDialog.ERROR_TYPE)
-////                                        .setTitleText("Oops...")
-////                                        .setContentText("" +jsonObject.getString("reason"))
-////                                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-////                                            @Override
-////                                            public void onClick(SweetAlertDialog sDialog) {
-////                                                sDialog.dismissWithAnimation();
-////                                            }
-////                                        })
-////                                        .show();
-//                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -265,10 +262,10 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
                 return params;
             }
         };
-        MyApplication.getInstance().addToRequestQueue(postRequest);
-//        postRequest.setShouldCache(false);
-//        queue.getCache().clear();
-//        queue.add(postRequest);
+//        MyApplication.getInstance().addToRequestQueue(postRequest);
+        postRequest.setShouldCache(false);
+        queue.getCache().clear();
+        queue.add(postRequest);
     }
 
     /**
@@ -281,7 +278,7 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
         if (viewHolder instanceof CartListAdapter.MyViewHolder) {
             // get the removed item name to display it in snack bar
             String name = cartList.get(viewHolder.getAdapterPosition()).getName();
-
+            castVote(String.valueOf(cartList.get(viewHolder.getAdapterPosition()).getId()));
             // backup of removed item for undo purpose
             final Item deletedItem = cartList.get(viewHolder.getAdapterPosition());
             final int deletedIndex = viewHolder.getAdapterPosition();
@@ -304,5 +301,82 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
             snackbar.show();
         }
     }
+
+    private void castVote(final String participantId){
+        progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Casting vote...");
+        progressDialog.show();
+
+        String url = VOTINGURL;
+        Log.i("URL->",url);
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        // response
+                        // Logger.addLogAdapter(new AndroidLogAdapter());
+                        Log.d("Response-> ", response);
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            new SweetAlertDialog(getActivity(),SweetAlertDialog.SUCCESS_TYPE)
+                                    .setTitleText("WoW!!")
+                                    .setContentText(jsonObject.getString("message"))
+                                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                        @Override
+                                        public void onClick(SweetAlertDialog sDialog) {
+                                            sDialog.dismissWithAnimation();
+                                            GameFragment gameFragment = new GameFragment();
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,gameFragment).commit();
+                                        }
+                                    })
+                                    .show();
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                        progressDialog.dismiss();
+                        new SweetAlertDialog(getActivity(),SweetAlertDialog.ERROR_TYPE)
+                                .setTitleText("Oops...")
+                                .setContentText("Something went wrong!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+        ) {
+
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("user_id", userId);
+                params.put("event_id", "1");
+                params.put("participant_id", participantId);
+                params.put("vote", "1");
+                return params;
+            }
+        };
+        MyApplication.getInstance().addToRequestQueue(postRequest);
+    }
+
 
 }

@@ -16,4 +16,15 @@
     <color name="description">#a9a9a9</color>
     <color name="viewBg">#f1f5f8</color>
     <color name="album_title">#4c4c4c</color>
+    <color name="black">#000000</color>
+    <color name="white">#fff</color>
+
+    <!--<color name="colorPrimary">#2a3c58</color>-->
+    <!--<color name="colorPrimaryDark">#192943</color>-->
+    <!--<color name="colorAccent">#4c6481</color>-->
+
+    <!--<color name="primary">#009688</color>-->
+    <!--<color name="primary_dark">#008080</color>-->
+    <!--<color name="primary_darker">#008B8B</color>-->
+    <!--<color name="accent">#ffffff</color>-->
 </resources>
