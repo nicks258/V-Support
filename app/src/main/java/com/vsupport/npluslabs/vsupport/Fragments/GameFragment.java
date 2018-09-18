@@ -83,7 +83,7 @@ public class GameFragment extends Fragment {
             public void onClick(View view) {
                 counter++;
                 score.setText(""+counter);
-                if(counter==20){
+                if(counter==2000){
                     sendScore(String.valueOf(count));
 
                 }
