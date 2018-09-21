@@ -10,21 +10,21 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="hit_me">Hit me</string>
-    <string name="nav_item_home">Shows</string>
+    <string name="nav_item_home">Home</string>
     <string name="nav_item_friends">Events</string>
     <string name="nav_item_notifications">Activities</string>
 
     <!-- navigation drawer item labels  -->
     <string-array name="nav_drawer_labels">
         <item>@string/nav_item_home</item>
-        <item>@string/nav_item_friends</item>
-        <item>@string/nav_item_notifications</item>
+        <!--<item>@string/nav_item_friends</item>-->
+        <!--<item>@string/nav_item_notifications</item>-->
     </string-array>
 
     <string-array name="elements_home">
-        <item>Telugu</item>
-        <item>Tamil</item>
-        <item>English</item>
+        <item>Dashboard</item>
+        <item>Shows</item>
+        <!--<item>English</item>-->
         <!--<item>Tagore</item>-->
     </string-array>
 

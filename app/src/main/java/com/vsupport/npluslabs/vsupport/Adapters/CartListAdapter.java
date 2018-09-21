@@ -53,7 +53,7 @@ public class CartListAdapter extends RecyclerView.Adapter<CartListAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         final Item item = cartList.get(position);
         holder.name.setText(item.getName());
-        holder.description.setText(item.getDescription());
+        holder.description.setText("Number of Participants: "+item.getParticipatedUsers());
         holder.price.setText("Votes " + item.getPrice());
 
         Glide.with(context)

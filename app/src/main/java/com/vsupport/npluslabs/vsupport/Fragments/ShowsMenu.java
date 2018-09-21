@@ -1,25 +1,20 @@
 package com.vsupport.npluslabs.vsupport.Fragments;
 
 
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -43,12 +38,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TeluguShowsMenu extends Fragment {
+public class ShowsMenu extends Fragment {
     private RecyclerView recyclerView;
     private AlbumsAdapter adapter;
     private List<Album> albumList;
     private String url = "http://almaland.net/vsupport_api/events";
-    public TeluguShowsMenu() {
+    public ShowsMenu() {
         // Required empty public constructor
     }
     View view;
@@ -81,7 +76,7 @@ public class TeluguShowsMenu extends Fragment {
                 new RecyclerItemClickListener(getContext(), recyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
                     @Override public void onItemClick(View view, int position) {
                        // Toast.makeText(getActivity(),"clicked on"+ position,Toast.LENGTH_LONG).show();
-                        TamilShows tamilShows = new TamilShows();
+                        ParticipantsList tamilShows = new ParticipantsList();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,tamilShows).addToBackStack(null).commit();
                         // do whatever
                     }

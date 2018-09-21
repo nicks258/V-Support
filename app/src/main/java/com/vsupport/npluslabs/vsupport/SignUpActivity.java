@@ -133,12 +133,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            Toast.makeText(SignUpActivity.this,"between 4 and 10 alphanumeric characters",Toast.LENGTH_LONG).show();
+            Toast.makeText(SignUpActivity.this," Enter a password between 4 and 10 alphanumeric characters",Toast.LENGTH_LONG).show();
             valid = false;
         }
 
-        if (name.isEmpty() || name.length() < 4 || name.length() > 10) {
-            Toast.makeText(SignUpActivity.this,"between 4 and 10 alphanumeric characters",Toast.LENGTH_LONG).show();
+        if (name.isEmpty()) {
+            Toast.makeText(SignUpActivity.this,"Name should not be empty",Toast.LENGTH_LONG).show();
             valid = false;
         }
 
@@ -146,9 +146,7 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(SignUpActivity.this,"Phone Number is invalid",Toast.LENGTH_LONG).show();
             valid = false;
         }
-        else {
-            //Log.i("Cool");
-        }
+
 
         return valid;
     }

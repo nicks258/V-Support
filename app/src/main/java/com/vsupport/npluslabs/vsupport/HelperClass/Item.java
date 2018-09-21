@@ -4,8 +4,10 @@ public class Item {
     int id;
     String name;
     String description;
-    double price;
+    int price;
     String thumbnail;
+
+    int participatedUsers;
 
     public Item() {
     }
@@ -16,6 +18,14 @@ public class Item {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getParticipatedUsers() {
+        return participatedUsers;
+    }
+
+    public void setParticipatedUsers(int participatedUsers) {
+        this.participatedUsers = participatedUsers;
     }
 
     public String getName() {
@@ -34,11 +44,11 @@ public class Item {
         this.description = description;
     }
 
-    public double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 

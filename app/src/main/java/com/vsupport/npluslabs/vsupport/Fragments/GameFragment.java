@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,6 +56,7 @@ public class GameFragment extends Fragment {
     private static final String SAVEURL = "http://almaland.net/vsupport_api/save_record";
     private String EVENT_DATE_TIME = "2018-12-31 10:30:00";
     private String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private String participantId;
     private LinearLayout linear_layout_1, linear_layout_2;
     //    private TextView tv_days, tv_hour;
     private TextView tv_second;
@@ -89,6 +89,10 @@ public class GameFragment extends Fragment {
                 }
             }
         });
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            participantId = bundle.getString("participant_id", null);
+        }
         linear_layout_1 = view.findViewById(R.id.linear_layout_1);
         linear_layout_2 = view.findViewById(R.id.linear_layout_2);
 //        tv_days =  view.findViewById(R.id.tv_days);
@@ -269,8 +273,8 @@ public class GameFragment extends Fragment {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.dismissWithAnimation();
-                        TeluguShowsMenu teluguShowsMenu = new TeluguShowsMenu();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body,teluguShowsMenu).commit();
+                        ShowsMenu showsMenu = new ShowsMenu();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container_body, showsMenu).commit();
                     }
                 })
                 .show();
@@ -384,6 +388,7 @@ public class GameFragment extends Fragment {
                 params.put("user_id", userId);
                 params.put("event", "2k");
                 params.put("time_taken", timeTaken);
+                params.put("participant_id",participantId);
                // params.put("vote", "1");
                 return params;
             }

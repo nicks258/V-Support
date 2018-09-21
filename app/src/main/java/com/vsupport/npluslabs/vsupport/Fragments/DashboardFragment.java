@@ -2,7 +2,6 @@ package com.vsupport.npluslabs.vsupport.Fragments;
 
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,48 +17,45 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import com.vsupport.npluslabs.vsupport.Adapters.CartListAdapter;
 import com.vsupport.npluslabs.vsupport.HelperClass.Item;
-import com.vsupport.npluslabs.vsupport.LoginActivity;
+import com.vsupport.npluslabs.vsupport.HelperClass.RecyclerItemTouchHelper;
 import com.vsupport.npluslabs.vsupport.MainActivity;
 import com.vsupport.npluslabs.vsupport.MyApplication;
 import com.vsupport.npluslabs.vsupport.R;
-import com.vsupport.npluslabs.vsupport.HelperClass.RecyclerItemTouchHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static android.content.Context.MODE_PRIVATE;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TamilShows extends Fragment implements RecyclerItemTouchHelper.RecyclerItemTouchHelperListener {
+public class DashboardFragment extends Fragment {
 
-    View view;
-    public TamilShows() {
+
+    public DashboardFragment() {
         // Required empty public constructor
     }
+    View view;
     private static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView recyclerView;
     private List<Item> cartList;
@@ -73,7 +69,7 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_tamil_shows, container, false);
+        view =  inflater.inflate(R.layout.fragment_dashboard, container, false);
         recyclerView = view.findViewById(R.id.recycler_view);
         coordinatorLayout = view.findViewById(R.id.coordinator_layout);
         cartList = new ArrayList<>();
@@ -92,8 +88,7 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
         // only ItemTouchHelper.LEFT added to detect Right to Left swipe
         // if you want both Right -> Left and Left -> Right
         // add pass ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT as param
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback = new RecyclerItemTouchHelper(0, ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
+
 
 
         // making http call and fetching menu json
@@ -204,11 +199,11 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
                     @Override
                     public void onResponse(String response) {
                         // response
-                       // Logger.addLogAdapter(new AndroidLogAdapter());
+                        // Logger.addLogAdapter(new AndroidLogAdapter());
                         Log.d("Response-> ", response);
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Log.i("TamilShows", jsonObject.toString());
+                            Log.i("ParticipantsList", jsonObject.toString());
                             JSONArray events = jsonObject.getJSONArray("participants");
                             for(int i=0;i<events.length();i++){
                                 Item item = new Item();
@@ -218,13 +213,21 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
                                 String participant_pic = participantObject.getString("participant_pic");
                                 String description = participantObject.getString("participant_des");
                                 int votes = participantObject.getInt("votes");
+                                int participatedUsers = participantObject.getInt("participated_users");
+                                item.setParticipatedUsers(participatedUsers);
                                 item.setName(participantName);
                                 item.setDescription(description);
                                 item.setId(id);
                                 item.setPrice(votes);
                                 item.setThumbnail(participant_pic);
                                 cartList.add(item);
+
                             }
+                            Collections.sort(cartList, new Comparator<Item>() {
+                                public int compare(Item p1, Item p2) {
+                                    return Integer.compare(p1.getPrice(), p2.getPrice());
+                                }
+                            });
                             mAdapter.notifyDataSetChanged();
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -273,34 +276,7 @@ public class TamilShows extends Fragment implements RecyclerItemTouchHelper.Recy
      * item will be removed on swiped
      * undo option will be provided in snackbar to restore the item
      */
-    @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
-        if (viewHolder instanceof CartListAdapter.MyViewHolder) {
-            // get the removed item name to display it in snack bar
-            String name = cartList.get(viewHolder.getAdapterPosition()).getName();
-            castVote(String.valueOf(cartList.get(viewHolder.getAdapterPosition()).getId()));
-            // backup of removed item for undo purpose
-            final Item deletedItem = cartList.get(viewHolder.getAdapterPosition());
-            final int deletedIndex = viewHolder.getAdapterPosition();
 
-            // remove the item from recycler view
-          //  mAdapter.removeItem(viewHolder.getAdapterPosition());
-
-            // showing snack bar with Undo option
-            Snackbar snackbar = Snackbar
-                    .make(coordinatorLayout,   " You voted for " + name + " !", Snackbar.LENGTH_LONG);
-//            snackbar.setAction("UNDO", new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    // undo is selected, restore the deleted item
-//                    mAdapter.restoreItem(deletedItem, deletedIndex);
-//                }
-//            });
-            snackbar.setActionTextColor(Color.YELLOW);
-            snackbar.show();
-        }
-    }
 
     private void castVote(final String participantId){
         progressDialog = new ProgressDialog(getActivity(),
